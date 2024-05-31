@@ -9,7 +9,9 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-const wss = new WebSocket.Server({ port: 8080 });
+const PORT = process.env.PORT || 4001;
+const server = require('http').createServer();
+const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
   ws.send(JSON.stringify({ message: "Welcome to WebSocket server!" }));
@@ -30,6 +32,10 @@ mongoose.connection.once("open", () => {
   changeStream.on("change", (change) => {
     broadcast({ message: "Task list updated", change });
   });
+});
+
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = wss;
