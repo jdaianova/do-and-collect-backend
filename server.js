@@ -6,15 +6,26 @@ const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 const websocketServer = require("./websocketServer");
 
+const PORT = process.env.PORT || 4001;
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
+const allowedOrigins = [PORT, "https://jdaianova.github.io/do-and-collect-frontend/"];
 const corsOptions = {
-  origin: "https://jdaianova.github.io",
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   optionsSuccessStatus: 200,
 };
+
+
 app.use(cors(corsOptions));
 
 mongoose
@@ -28,7 +39,6 @@ mongoose
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
-const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
