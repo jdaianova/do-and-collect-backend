@@ -12,21 +12,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-
-const allowedOrigins = [PORT, "https://jdaianova.github.io/do-and-collect-frontend/"];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  optionsSuccessStatus: 200,
-};
-
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 mongoose
   .connect(process.env.MONGODB_URI, {
