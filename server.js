@@ -10,7 +10,12 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  origin: "https://jdaianova.github.io",
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 mongoose
   .connect(process.env.MONGODB_URI, {
